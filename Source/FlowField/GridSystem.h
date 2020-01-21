@@ -7,6 +7,7 @@
 #include "GridSystem.generated.h"
 
 
+
 USTRUCT()
 struct FGridTiles
 {
@@ -55,9 +56,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY()
+		USceneComponent* Root;
+
 	void GridTileNumber(int& GridTileNumberX, int& GridTileNumberY);
 
 	void GenerateMapDataFromWorld();
+	void GetTilePosition(int i, int j);
+//FVector
 
 	//void AGridSystem::SetTilePosition(FVector TilePosition);
 

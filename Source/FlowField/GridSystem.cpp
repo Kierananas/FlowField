@@ -3,13 +3,19 @@
 
 #include "GridSystem.h"
 #include "Math.h"
+#include "Components/SceneComponent.h"
+
+
 
 // Sets default values
 AGridSystem::AGridSystem()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	GridSizeWorld = FVector2D(250, 250);
+	Root = CreateAbstractDefaultSubobject<USceneComponent>(TEXT("Root"));
+	RootComponent = Root;
+	
+	GridSizeWorld = FVector2D(500, 500);
 	TileSize = 50;
 }
 
@@ -19,7 +25,8 @@ void AGridSystem::BeginPlay()
 {
 	Super::BeginPlay();
 	FVector GridLocation = GetActorLocation();
-	UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
+	//UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
+	GenerateMapDataFromWorld();
 }
 
 // Called every frame
@@ -51,18 +58,36 @@ void AGridSystem::GenerateMapDataFromWorld()
 {
 	int GridTileNumberX, GridTileNumberY;
 	GridTileNumber(GridTileNumberX, GridTileNumberY);
+	
+	//FString dave = "Dave";
+
+
 
 	for (int i = 0; i < GridTileNumberX; i++)
 	{
-		int X = GridTileNumberX;
+		int x = GridTileNumberX;
+		//UE_LOG(LogTemp, Warning, TEXT("X %d"), i);
 		for (int  j = 0; j < GridTileNumberY; j++)
 		{
 			int Y = GridTileNumberY;
-		
-			UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
-		
+			GetTilePosition(i, j);
+			//UE_LOG(LogTemp, Warning, TEXT("123142"));
+			//UE_LOG(LogTemp, Warning, TEXT("Y %d"), j);
 		
 		}
 	}
 }
+//FVector
+ void AGridSystem::GetTilePosition(int i, int j)
+{
+	FVector vec1 = Root->GetRightVector();
+	UE_LOG(LogTemp, Warning, TEXT("X location is %f"), vec1.X);
+	float x = i * (TileSize * 2.0);
+	UE_LOG(LogTemp, Warning, TEXT("MyCharacter's Health is %f"), x);
+	//float x = x->ToFloat(i);
+	
+	
+	FVector vec2 = Root->GetForwardVector();
+	UE_LOG(LogTemp, Warning, TEXT("Y location is %f"), vec2.Y);
 
+}
