@@ -4,6 +4,10 @@
 #include "GridSystem.h"
 #include "Math.h"
 #include "Components/SceneComponent.h"
+#include "Engine/World.h"
+#include "Engine/EngineTypes.h"
+#include "Math/Quat.h"
+
 
 
 
@@ -62,7 +66,7 @@ void AGridSystem::GenerateMapDataFromWorld()
 	//FString dave = "Dave";
 
 
-
+			
 	for (int i = 0; i < GridTileNumberX; i++)
 	{
 		int x = GridTileNumberX;
@@ -70,7 +74,11 @@ void AGridSystem::GenerateMapDataFromWorld()
 		for (int  j = 0; j < GridTileNumberY; j++)
 		{
 			int Y = GridTileNumberY;
-			GetTilePosition(i, j);
+			
+			FVector TilePosition = GetTilePosition(i, j);
+			//UE_LOG(LogTemp, Warning, TEXT("TilePosition is %f, %F"), TilePosition.X, TilePosition.Y);
+			TraceFloorAndObstacles(TilePosition);
+
 			//UE_LOG(LogTemp, Warning, TEXT("123142"));
 			//UE_LOG(LogTemp, Warning, TEXT("Y %d"), j);
 		
@@ -78,16 +86,75 @@ void AGridSystem::GenerateMapDataFromWorld()
 	}
 }
 //FVector
- void AGridSystem::GetTilePosition(int i, int j)
+FVector AGridSystem::GridBottomLeft()
+ {
+	 FVector rightVector = Root->GetRightVector();
+	 FVector xVector = (rightVector * GridSizeWorld.X) - GridLocation;
+
+	 
+	 FVector forwardVector = Root->GetForwardVector();
+	 FVector yVector = forwardVector * GridSizeWorld.Y;
+	 return FVector(xVector - yVector);
+ }
+
+
+ FVector AGridSystem::GetTilePosition(int i, int j)
 {
-	FVector vec1 = Root->GetRightVector();
-	UE_LOG(LogTemp, Warning, TEXT("X location is %f"), vec1.X);
+	FVector rightVector = Root->GetRightVector();
+	//UE_LOG(LogTemp, Warning, TEXT("X location is %f"), rightVector.X);
 	float x = i * (TileSize * 2.0);
-	UE_LOG(LogTemp, Warning, TEXT("MyCharacter's Health is %f"), x);
+	FVector xvec = rightVector * (x + TileSize);
+	//UE_LOG(LogTemp, Warning, TEXT("X is %f"), x);
 	//float x = x->ToFloat(i);
 	
 	
-	FVector vec2 = Root->GetForwardVector();
-	UE_LOG(LogTemp, Warning, TEXT("Y location is %f"), vec2.Y);
+	FVector forwardVector = Root->GetForwardVector();
+	//UE_LOG(LogTemp, Warning, TEXT("Y location is %f"), forwardVector.Y);
+	float y = j * (TileSize * 2.0);
+	FVector yvec = forwardVector * (y + TileSize);
+	//UE_LOG(LogTemp, Warning, TEXT("Y is %f"), y);
+ 
+	FVector GridBottomLeftPoint = GridBottomLeft();
+
+	FVector TilePosition = GridBottomLeftPoint + xvec + yvec;
+
+	return FVector(TilePosition);
+ 
+ }
+
+ void AGridSystem::TraceFloorAndObstacles(FVector TilePosition)
+{
+	 const ECollisionChannel CollisionChannel = Root->GetCollisionObjectType();
+	 const UEnum* ourEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("ETraceTypeQuery"), true);
+	 UE_LOG(LogTemp, Warning, TEXT("Hello"));
+
+	 for (int i = 0; i < 5; i++) {
+		 CollisionChannel(i)
+	 }
+	 //CollisionChannel
+	 
+	 //UE_LOG(LogTemp, Warning, TEXT("Enum: %s"));
+	 //int numberOfChannels = CollisionChannel->GetMaxEnumValue();
+	 //FHitResult OutHit;
+	 //FVector TileAdded = TilePosition + FVector(1.f, 1.f, 1.f);
+	 //bool bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(0.f, 0.f, 0.f, 0.f), ourEnum);
+
+
+	///* bool UWorld::SweepSingleByChannel(struct FHitResult& OutHit, const FVector& Start, const FVector& End, const FQuat& Rot, ECollisionChannel TraceChannel, const FCollisionShape& CollisionShape, const FCollisionQueryParams& Params /* = FCollisionQueryParams::DefaultQueryParam */, const FCollisionResponseParams& ResponseParam /* = FCollisionResponseParams::DefaultResponseParam */) const
+	 /*{
+		 if (CollisionShape.IsNearlyZero())
+		 {
+			 return LineTraceSingleByChannel(OutHit, Start, End, TraceChannel, Params, ResponseParam);
+		 }
+		 else
+		 {
+			 return FPhysicsInterface::GeomSweepSingle(this, CollisionShape, Rot, OutHit, Start, End, TraceChannel, Params, ResponseParam, FCollisionObjectQueryParams::DefaultObjectQueryParam);
+		 }
+	 }*/
+
+
 
 }
+
+
+

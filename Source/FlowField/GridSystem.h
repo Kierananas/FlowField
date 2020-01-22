@@ -8,6 +8,7 @@
 
 
 
+
 USTRUCT()
 struct FGridTiles
 {
@@ -62,9 +63,14 @@ public:
 	void GridTileNumber(int& GridTileNumberX, int& GridTileNumberY);
 
 	void GenerateMapDataFromWorld();
-	void GetTilePosition(int i, int j);
+	//void GetTilePosition(int i, int j);
+	FVector GetTilePosition(int i, int j);
 //FVector
+	FVector GridBottomLeft();
 
 	//void AGridSystem::SetTilePosition(FVector TilePosition);
+
+	void TraceFloorAndObstacles(FVector TilePosition);
+
 
 };
