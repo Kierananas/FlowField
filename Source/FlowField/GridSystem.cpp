@@ -9,7 +9,6 @@
 #include "Math/Quat.h"
 
 
-#include "Kismet/BlueprintFunctionLibrary.h"
 
 
 // Sets default values
@@ -98,34 +97,6 @@ FVector AGridSystem::GridBottomLeft()
 	 return FVector(xVector - yVector);
  }
 
-int AGridSystem::GetTileCost(EGroundTypes TileType)
-{
-	int TileCost = 0;
-	switch (TileType)
-	{
-	case EGroundTypes::NORMAL:
-		TileCost = 1;
-		break;
-	case EGroundTypes::DIFFICULT:
-		TileCost = 2;
-			break;
-	case EGroundTypes::REALLYDIFFICULT:
-		TileCost = 5;
-		break;
-	case EGroundTypes::IMPOSSIBLE:
-		TileCost = 255;
-		break;
-	case EGroundTypes::NONE:
-		TileCost = 255;
-		break;
-	}
-
-	return TileCost;
-
-}
-
-
-
 
  FVector AGridSystem::GetTilePosition(int i, int j)
 {
@@ -153,32 +124,34 @@ int AGridSystem::GetTileCost(EGroundTypes TileType)
 
  void AGridSystem::TraceFloorAndObstacles(FVector TilePosition)
 {
-	 FVector TileAdded = TilePosition + FVector(1.f, 1.f, 1.f);
-	 FHitResult OutHit;
-	 bool bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(), ECollisionChannel::ECC_GameTraceChannel1, FCollisionShape::MakeSphere(TileSize - TileSizeMinus));
-	 if (bSphereTrace) {
-		 
-		 bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(), ECollisionChannel::ECC_GameTraceChannel2, FCollisionShape::MakeSphere(TileSize - TileSizeMinus));
+	 const ECollisionChannel CollisionChannel = Root->GetCollisionObjectType();
+	 const UEnum* ourEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("ETraceTypeQuery"), true);
+	 UE_LOG(LogTemp, Warning, TEXT("Hello"));
 
-		 if (bSphereTrace) {
-			 //do the cast etc.
-			 //top add to map.
-			 //make the base obstacle class, because we need to cast to it to get its tile type.
-			 //Cast<>(OutHit.Actor)
+	 for (int i = 0; i < 5; i++) {
+		 CollisionChannel(i)
+	 }
+	 //CollisionChannel
+	 
+	 //UE_LOG(LogTemp, Warning, TEXT("Enum: %s"));
+	 //int numberOfChannels = CollisionChannel->GetMaxEnumValue();
+	 //FHitResult OutHit;
+	 //FVector TileAdded = TilePosition + FVector(1.f, 1.f, 1.f);
+	 //bool bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(0.f, 0.f, 0.f, 0.f), ourEnum);
 
-			 //GetTileCost(EGroundTypes::);
+
+	///* bool UWorld::SweepSingleByChannel(struct FHitResult& OutHit, const FVector& Start, const FVector& End, const FQuat& Rot, ECollisionChannel TraceChannel, const FCollisionShape& CollisionShape, const FCollisionQueryParams& Params /* = FCollisionQueryParams::DefaultQueryParam */, const FCollisionResponseParams& ResponseParam /* = FCollisionResponseParams::DefaultResponseParam */) const
+	 /*{
+		 if (CollisionShape.IsNearlyZero())
+		 {
+			 return LineTraceSingleByChannel(OutHit, Start, End, TraceChannel, Params, ResponseParam);
 		 }
-		 else {
-			 //bottom add to map.
-			 int tile_cost = GetTileCost(EGroundTypes::NORMAL);
-			 //do more stuff
+		 else
+		 {
+			 return FPhysicsInterface::GeomSweepSingle(this, CollisionShape, Rot, OutHit, Start, End, TraceChannel, Params, ResponseParam, FCollisionObjectQueryParams::DefaultObjectQueryParam);
 		 }
-	 }
-	 else {
-		 //add the nothing thing
-		 int tile_cost = GetTileCost(EGroundTypes::NONE);
-		 //do more stuff.
-	 }
+	 }*/
+
 
 
 }

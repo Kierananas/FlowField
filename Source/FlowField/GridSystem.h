@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "DataTypes.h"
 #include "GridSystem.generated.h"
+
+
 
 
 USTRUCT()
@@ -48,9 +49,6 @@ public:
 	float TileSize;
 	float TileSizeMinus;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
-		EGroundTypes GroundTypesEnum;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -66,13 +64,10 @@ public:
 
 	void GenerateMapDataFromWorld();
 	//void GetTilePosition(int i, int j);
-
+	FVector GetTilePosition(int i, int j);
 //FVector
 	FVector GridBottomLeft();
 
-	int GetTileCost(EGroundTypes TileType);
-
-	FVector GetTilePosition(int i, int j);
 	//void AGridSystem::SetTilePosition(FVector TilePosition);
 
 	void TraceFloorAndObstacles(FVector TilePosition);
