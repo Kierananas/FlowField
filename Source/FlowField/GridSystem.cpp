@@ -165,6 +165,7 @@ int AGridSystem::GetTileCost(EGroundTypes TileType)
 			 //top add to map.
 			 //make the base obstacle class, because we need to cast to it to get its tile type.
 			 //Cast<>(OutHit.Actor)
+			 //dynamic_cast <AActor - ObstacleClass> (OutHit.Actor)
 
 			 //GetTileCost(EGroundTypes::);
 		 }

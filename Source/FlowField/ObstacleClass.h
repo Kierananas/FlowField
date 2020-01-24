@@ -7,26 +7,30 @@
 #include "DataTypes.h"
 #include "ObstacleClass.generated.h"
 
+class AActor;
 UCLASS()
 class FLOWFIELD_API AObstacleClass : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AObstacleClass();
 
 	UPROPERTY()
 		USceneComponent* Root;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Obstacle")
+		UStaticMeshComponent* ObstacleMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, VisibleAnywhere)
-		EGroundTypes GroundType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obstacle", meta = (AllowPrivateAccess = "true"))
+		EGroundTypes GroundTypes;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
