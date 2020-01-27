@@ -6,9 +6,11 @@
 #include "Components/SceneComponent.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
+#include "ObstacleClass.h"
 #include "Math/Quat.h"
 
 
+#include "Kismet/BlueprintFunctionLibrary.h"
 
 
 // Sets default values
@@ -62,11 +64,7 @@ void AGridSystem::GenerateMapDataFromWorld()
 {
 	int GridTileNumberX, GridTileNumberY;
 	GridTileNumber(GridTileNumberX, GridTileNumberY);
-	
-	//FString dave = "Dave";
-
-
-			
+				
 	for (int i = 0; i < GridTileNumberX; i++)
 	{
 		int x = GridTileNumberX;
@@ -77,7 +75,7 @@ void AGridSystem::GenerateMapDataFromWorld()
 			
 			FVector TilePosition = GetTilePosition(i, j);
 			//UE_LOG(LogTemp, Warning, TEXT("TilePosition is %f, %F"), TilePosition.X, TilePosition.Y);
-			TraceFloorAndObstacles(TilePosition);
+			TraceFloorAndObstacles(TilePosition, i, j);
 
 			//UE_LOG(LogTemp, Warning, TEXT("123142"));
 			//UE_LOG(LogTemp, Warning, TEXT("Y %d"), j);
@@ -96,6 +94,34 @@ FVector AGridSystem::GridBottomLeft()
 	 FVector yVector = forwardVector * GridSizeWorld.Y;
 	 return FVector(xVector - yVector);
  }
+
+int AGridSystem::GetTileCost(EGroundTypes TileType)
+{
+	int TileCost = 0;
+	switch (TileType)
+	{
+	case EGroundTypes::NORMAL:
+		TileCost = 1;
+		break;
+	case EGroundTypes::DIFFICULT:
+		TileCost = 2;
+			break;
+	case EGroundTypes::REALLYDIFFICULT:
+		TileCost = 5;
+		break;
+	case EGroundTypes::IMPOSSIBLE:
+		TileCost = 255;
+		break;
+	case EGroundTypes::NONE:
+		TileCost = 255;
+		break;
+	}
+
+	return TileCost;
+
+}
+
+
 
 
  FVector AGridSystem::GetTilePosition(int i, int j)
@@ -122,36 +148,70 @@ FVector AGridSystem::GridBottomLeft()
  
  }
 
- void AGridSystem::TraceFloorAndObstacles(FVector TilePosition)
+/* void AGridSystem::AddNewTile(FVector2D GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
+EGroundTypes* GroundTypes,
+FVector WorldLocation,
+int32 TileCost,
+int32 FinalCost,
+int32 CostFromStart,
+int32 EstimatedCostToTarget,
+FVector2D PreviousTile,
+int32 FlowDirection)
 {
-	 const ECollisionChannel CollisionChannel = Root->GetCollisionObjectType();
-	 const UEnum* ourEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("ETraceTypeQuery"), true);
-	 UE_LOG(LogTemp, Warning, TEXT("Hello"));
+FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
+	GroundTypes,
+	WorldLocation,
+	TileCost,
+	FinalCost,
+	CostFromStart,
+	EstimatedCostToTarget,
+	PreviousTile,
+	FlowDirection);
+//GridOfTiles.Add(GridIndex, NewTile);
+	} */
 
-	 for (int i = 0; i < 5; i++) {
-		 CollisionChannel(i)
+ void AGridSystem::TraceFloorAndObstacles(FVector TilePosition, int i, int j)
+{
+	 FVector TileAdded = TilePosition + FVector(1.f, 1.f, 1.f);
+	 FHitResult OutHit;
+	 AActor CollidedActor;
+	 float X(i);
+	 float Y(j);
+	 FVector2D StructKey(X,Y);
+	
+	 bool bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(), ECollisionChannel::ECC_GameTraceChannel1, FCollisionShape::MakeSphere(TileSize - TileSizeMinus));
+	 if (bSphereTrace) {
+		 
+		 bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(), ECollisionChannel::ECC_GameTraceChannel2, FCollisionShape::MakeSphere(TileSize - TileSizeMinus));
+
+		 if (bSphereTrace) {
+			 //do the cast etc.
+			 //top add to map.
+			 //make the base obstacle class, because we need to cast to it to get its tile type.
+			 //Cast<>(OutHit.Actor)
+			 //dynamic_cast <AActor - ObstacleClass> (OutHit.Actor)
+
+		 	
+		 	GridOfTiles.Emplace(StructKey);
+		 	
+		 	Cast<AObstacleClass>(OutHit.GetActor())->GroundTypes;
+			 int tile_cost = GetTileCost(GroundTypesEnum);
+		 	
+		 	 //int tile_cost = GetTileCost(GetActor*AObstacleClass::GroundTypes))
+			 //GetTileCost(EGroundTypes::);
+		 }
+		 else {
+			 //bottom add to map.
+			 
+			 int tile_cost = GetTileCost(EGroundTypes::NORMAL);
+			 //do more stuff
+		 }
 	 }
-	 //CollisionChannel
-	 
-	 //UE_LOG(LogTemp, Warning, TEXT("Enum: %s"));
-	 //int numberOfChannels = CollisionChannel->GetMaxEnumValue();
-	 //FHitResult OutHit;
-	 //FVector TileAdded = TilePosition + FVector(1.f, 1.f, 1.f);
-	 //bool bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(0.f, 0.f, 0.f, 0.f), ourEnum);
-
-
-	///* bool UWorld::SweepSingleByChannel(struct FHitResult& OutHit, const FVector& Start, const FVector& End, const FQuat& Rot, ECollisionChannel TraceChannel, const FCollisionShape& CollisionShape, const FCollisionQueryParams& Params /* = FCollisionQueryParams::DefaultQueryParam */, const FCollisionResponseParams& ResponseParam /* = FCollisionResponseParams::DefaultResponseParam */) const
-	 /*{
-		 if (CollisionShape.IsNearlyZero())
-		 {
-			 return LineTraceSingleByChannel(OutHit, Start, End, TraceChannel, Params, ResponseParam);
-		 }
-		 else
-		 {
-			 return FPhysicsInterface::GeomSweepSingle(this, CollisionShape, Rot, OutHit, Start, End, TraceChannel, Params, ResponseParam, FCollisionObjectQueryParams::DefaultObjectQueryParam);
-		 }
-	 }*/
-
+	 else {
+		 //add the nothing thing
+		 int tile_cost = GetTileCost(EGroundTypes::NONE);
+		 //do more stuff.
+	 }
 
 
 }
