@@ -8,24 +8,33 @@
 #include "GridSystem.generated.h"
 
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FGridTiles
 {
 	GENERATED_BODY()
 
 		//now we can add our properties.
 
-	FVector2D GridIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
+		FVector2D GridIndex;
 	//AActor TileActor;
 	//AActor UnitOnThisTile;
-	EGroundTypes* GroundTypes;
-	FVector WorldLocation;
-	int32 TileCost;
-	int32 FinalCost;
-	int32 CostFromStart;
-	int32 EstimatedCostToTarget;
-	FVector2D PreviousTile;
-	int32 FlowDirection;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
+		EGroundTypes GroundTypes;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
+		FVector WorldLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
+		int32 TileCost;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
+		int32 FinalCost;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
+		int32 CostFromStart;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
+		int32 EstimatedCostToTarget;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
+		FVector2D PreviousTile;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
+		int32 FlowDirection;
 
 	/*FGridTiles(FVector2D InGridIndex, EGroundTypes* InGroundTypes, FVector InWorldLocation,
 		int32 InTileCost, int32 InFinalCost, int32 InCostFromStart, int32 InEstimatedCostToTarget, FVector2D InPreviousTile, int32 InFlowDirection) :
@@ -46,6 +55,13 @@ public:
 	AGridSystem();
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	//float;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tiles")
+		bool SpawnNoneTiles = false;
+
+	UPROPERTY()
+		USceneComponent* Root;
+
 
 	UPROPERTY()
 		TMap<FVector2D, FGridTiles> GridOfTiles;
@@ -73,12 +89,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY()
-		USceneComponent* Root;
+	void GenerateMapDataFromWorld();
+
+	void SpawnTile(bool SpawnNoneTiles);
 
 	void GridTileNumber(int& GridTileNumberX, int& GridTileNumberY);
 
-	void GenerateMapDataFromWorld();
+	
 	//void GetTilePosition(int i, int j);
 
 	/*void AddNewTile(FVector2D GridIndex, //AActor TileActor; //AActor UnitOnThisTile;

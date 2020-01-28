@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
 #include "ObstacleClass.h"
+#include "GridTile.h"
 #include "Math/Quat.h"
 
 
@@ -33,6 +34,7 @@ void AGridSystem::BeginPlay()
 	FVector GridLocation = GetActorLocation();
 	//UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
 	GenerateMapDataFromWorld();
+	SpawnTile(SpawnNoneTiles);
 }
 
 // Called every frame
@@ -76,13 +78,60 @@ void AGridSystem::GenerateMapDataFromWorld()
 			FVector TilePosition = GetTilePosition(i, j);
 			//UE_LOG(LogTemp, Warning, TEXT("TilePosition is %f, %F"), TilePosition.X, TilePosition.Y);
 			TraceFloorAndObstacles(TilePosition, i, j);
-
+			
 			//UE_LOG(LogTemp, Warning, TEXT("123142"));
 			//UE_LOG(LogTemp, Warning, TEXT("Y %d"), j);
 		
 		}
 	}
 }
+void AGridSystem::SpawnTile(bool SpawnNoneTiles)
+{
+	
+
+
+	//this->GridOfTiles;
+		
+	for (auto& Entry : GridOfTiles)
+	{
+		
+		if (GridOfTiles.Find(Entry.Key)->GroundTypes != (EGroundTypes::NORMAL) || SpawnNoneTiles == true) {
+			
+			FGridTiles Tile;
+			FVector TilePosition = Tile.WorldLocation;
+			FVector2D GridVector = Tile.GridIndex;
+			FActorSpawnParameters GridSpawnParams;
+			//FVector TilePosition;
+			AGridTile* SpawnedTile = GetWorld()->SpawnActor<AGridTile>(GridSpawnParams);
+			UE_LOG(LogTemp, Warning, TEXT("GridVector is %f, %f"), GridVector.X, GridVector.Y);
+			/*template< class T >
+			T* SpawnActor
+			(
+				UClass* Class,
+				FVector const& Location,
+				FRotator const& Rotation,
+				AActor* Owner = NULL,
+				APawn* Instigator = NULL,
+				bool bNoCollisionFail = false
+			)
+			{
+				return (Class != NULL) ? Cast<T>(GetWorld()->SpawnActor(Class, NAME_None, &Location, &Rotation, NULL, bNoCollisionFail, false, Owner, Instigator)) : NULL;
+			}
+
+
+			AGridTile* GridTile = SpawnActor<AActor>(DefaultPawnClass, StartLocation, StartRotation, NULL, Instigator);
+
+
+		}*/
+
+
+		}
+		
+
+	}
+}
+
+
 //FVector
 FVector AGridSystem::GridBottomLeft()
  {
@@ -174,10 +223,19 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 {
 	 FVector TileAdded = TilePosition + FVector(1.f, 1.f, 1.f);
 	 FHitResult OutHit;
-	 AActor CollidedActor;
 	 float X(i);
 	 float Y(j);
+	 /*GridOfTilesKey*/
 	 FVector2D StructKey(X,Y);
+
+
+	 /*Make Struct*/
+	 FGridTiles tile;
+	 tile.GridIndex = StructKey;
+	 tile.WorldLocation = TilePosition;
+	 //add the nothing thing
+	 tile.TileCost = GetTileCost(EGroundTypes::NONE);
+	 tile.GroundTypes = EGroundTypes::NONE;
 	
 	 bool bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(), ECollisionChannel::ECC_GameTraceChannel1, FCollisionShape::MakeSphere(TileSize - TileSizeMinus));
 	 if (bSphereTrace) {
@@ -185,35 +243,23 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 		 bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(), ECollisionChannel::ECC_GameTraceChannel2, FCollisionShape::MakeSphere(TileSize - TileSizeMinus));
 
 		 if (bSphereTrace) {
-			 //do the cast etc.
-			 //top add to map.
-			 //make the base obstacle class, because we need to cast to it to get its tile type.
-			 //Cast<>(OutHit.Actor)
-			 //dynamic_cast <AActor - ObstacleClass> (OutHit.Actor)
 
-		 	
-		 	GridOfTiles.Emplace(StructKey);
-		 	
-		 	Cast<AObstacleClass>(OutHit.GetActor())->GroundTypes;
-			 int tile_cost = GetTileCost(GroundTypesEnum);
-		 	
-		 	 //int tile_cost = GetTileCost(GetActor*AObstacleClass::GroundTypes))
-			 //GetTileCost(EGroundTypes::);
+			 AObstacleClass* obstacle = Cast<AObstacleClass>(OutHit.Actor);
+			 //is valid.
+			 if (obstacle) {
+				tile.TileCost = GetTileCost(obstacle->GroundTypes);
+				tile.GroundTypes = obstacle->GroundTypes;
+			 }
 		 }
 		 else {
-			 //bottom add to map.
-			 
-			 int tile_cost = GetTileCost(EGroundTypes::NORMAL);
-			 //do more stuff
+
+			 tile.TileCost = GetTileCost(EGroundTypes::NORMAL);
+			 tile.GroundTypes = EGroundTypes::NORMAL;
 		 }
 	 }
-	 else {
-		 //add the nothing thing
-		 int tile_cost = GetTileCost(EGroundTypes::NONE);
-		 //do more stuff.
-	 }
 
-
+	 this->GridOfTiles.Add(StructKey, tile);
+	 //UE_LOG(LogTemp, Warning, TEXT("End of SphereTrace Loop X %f, Y %f"), StructKey.X, StructKey.Y);
 }
 
 
