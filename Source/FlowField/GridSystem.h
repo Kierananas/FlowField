@@ -8,6 +8,8 @@
 #include "GridSystem.generated.h"
 
 
+class AGridTile;
+
 USTRUCT(BlueprintType)
 struct FGridTiles
 {
@@ -56,8 +58,6 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	//float;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tiles")
-		bool SpawnNoneTiles = false;
 
 	UPROPERTY()
 		USceneComponent* Root;
@@ -85,13 +85,19 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Tile")
+		TSubclassOf<AGridTile> SpawnedTile;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void GenerateMapDataFromWorld();
 
+
+	UFUNCTION()
 	void SpawnTile(bool SpawnNoneTiles);
+
 
 	void GridTileNumber(int& GridTileNumberX, int& GridTileNumberY);
 

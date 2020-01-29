@@ -6,6 +6,7 @@
 #include "Components/SceneComponent.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
+#include "Engine/World.h"
 #include "ObstacleClass.h"
 #include "GridTile.h"
 #include "Math/Quat.h"
@@ -21,7 +22,7 @@ AGridSystem::AGridSystem()
 	PrimaryActorTick.bCanEverTick = true;
 	Root = CreateAbstractDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = Root;
-	
+
 	GridSizeWorld = FVector2D(500, 500);
 	TileSize = 50;
 }
@@ -32,7 +33,8 @@ void AGridSystem::BeginPlay()
 {
 	Super::BeginPlay();
 	FVector GridLocation = GetActorLocation();
-	//UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
+	UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
+	bool SpawnNoneTiles = false;
 	GenerateMapDataFromWorld();
 	SpawnTile(SpawnNoneTiles);
 }
@@ -71,64 +73,73 @@ void AGridSystem::GenerateMapDataFromWorld()
 	{
 		int x = GridTileNumberX;
 		//UE_LOG(LogTemp, Warning, TEXT("X %d"), i);
-		for (int  j = 0; j < GridTileNumberY; j++)
+		for (int j = 0; j < GridTileNumberY; j++)
 		{
 			int Y = GridTileNumberY;
-			
+
 			FVector TilePosition = GetTilePosition(i, j);
 			//UE_LOG(LogTemp, Warning, TEXT("TilePosition is %f, %F"), TilePosition.X, TilePosition.Y);
 			TraceFloorAndObstacles(TilePosition, i, j);
-			
+
 			//UE_LOG(LogTemp, Warning, TEXT("123142"));
 			//UE_LOG(LogTemp, Warning, TEXT("Y %d"), j);
-		
-		}
+		}	
 	}
+
+	/* Loop through all the elements and spawn the grid tile actor on each index */
+
+
 }
 void AGridSystem::SpawnTile(bool SpawnNoneTiles)
 {
-	
+
+	for (auto& Entry : GridOfTiles)
+	{
+			FVector2D StructKey = GridOfTiles.Find(Entry.Key)->GridIndex;
+			UE_LOG(LogTemp, Warning, TEXT("GridVector is %f, %f"), StructKey.X, StructKey.Y);
+
+			FRotator roc;
+			FVector TilePosition = GridOfTiles.Find(Entry.Key)->WorldLocation;
+
+			
+			FActorSpawnParameters SpawnParameters;
+			AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(SpawnedTile, TilePosition, roc, SpawnParameters);
+
+		
+		if (GridOfTiles.Find(Entry.Key)->GroundTypes != (EGroundTypes::NORMAL) || SpawnNoneTiles == true) {
+
+
+			/*template< class T >
+			 T* SpawnActor
+			 (
+				 UClass* Class,
+				 FVector const& Location,
+				 FRotator const& Rotation,
+				 AActor* Owner = NULL,
+				 APawn* Instigator = NULL,
+				 bool bNoCollisionFail = false
+			 )
+			 {
+				 return (Class != NULL) ? Cast<T>(GetWorld()->SpawnActor(Class, NAME_None, &Location, &Rotation, NULL, bNoCollisionFail, false, Owner, Instigator)) : NULL;
+			 }
+
+
+			 AGridTile* GridTile = SpawnActor<AActor>(DefaultPawnClass, StartLocation, StartRotation, NULL, Instigator);
+
+
+		 }*/
+
+
+		}
+
+
+	}
+
 
 
 	//this->GridOfTiles;
 		
-	for (auto& Entry : GridOfTiles)
-	{
-		
-		if (GridOfTiles.Find(Entry.Key)->GroundTypes != (EGroundTypes::NORMAL) || SpawnNoneTiles == true) {
-			
-			FGridTiles Tile;
-			FVector TilePosition = Tile.WorldLocation;
-			FVector2D GridVector = Tile.GridIndex;
-			FActorSpawnParameters GridSpawnParams;
-			//FVector TilePosition;
-			AGridTile* SpawnedTile = GetWorld()->SpawnActor<AGridTile>(GridSpawnParams);
-			UE_LOG(LogTemp, Warning, TEXT("GridVector is %f, %f"), GridVector.X, GridVector.Y);
-			/*template< class T >
-			T* SpawnActor
-			(
-				UClass* Class,
-				FVector const& Location,
-				FRotator const& Rotation,
-				AActor* Owner = NULL,
-				APawn* Instigator = NULL,
-				bool bNoCollisionFail = false
-			)
-			{
-				return (Class != NULL) ? Cast<T>(GetWorld()->SpawnActor(Class, NAME_None, &Location, &Rotation, NULL, bNoCollisionFail, false, Owner, Instigator)) : NULL;
-			}
 
-
-			AGridTile* GridTile = SpawnActor<AActor>(DefaultPawnClass, StartLocation, StartRotation, NULL, Instigator);
-
-
-		}*/
-
-
-		}
-		
-
-	}
 }
 
 
@@ -260,6 +271,16 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 
 	 this->GridOfTiles.Add(StructKey, tile);
 	 //UE_LOG(LogTemp, Warning, TEXT("End of SphereTrace Loop X %f, Y %f"), StructKey.X, StructKey.Y);
+
+
+
+
+
+
+
+
+
+
 }
 
 
