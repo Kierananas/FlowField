@@ -20,8 +20,11 @@ public:
 	UPROPERTY()
 		USceneComponent* Root;
 
-	UPROPERTY(VisibleAnywhere, Category = "Tile")
+	UPROPERTY()
 		UStaticMeshComponent* TileMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+		UStaticMesh* TileMeshAsset;
 
 	UPROPERTY(BlueprintCallable)
 		FTileCostChange OnTileCostChange;
@@ -36,7 +39,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void OnConstruction(const FTransform& Transform) override;
 
+	//void SetTileSize();
 
 
 };

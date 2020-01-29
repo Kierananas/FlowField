@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "DataTypes.h"
+#include "GridTile.h"
 #include "GridSystem.generated.h"
 
 
@@ -38,6 +39,7 @@ struct FGridTiles
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
 		int32 FlowDirection;
 
+
 	/*FGridTiles(FVector2D InGridIndex, EGroundTypes* InGroundTypes, FVector InWorldLocation,
 		int32 InTileCost, int32 InFinalCost, int32 InCostFromStart, int32 InEstimatedCostToTarget, FVector2D InPreviousTile, int32 InFlowDirection) :
 		GridIndex(InGridIndex), GroundTypes(InGroundTypes), WorldLocation(InWorldLocation), TileCost(InTileCost), FinalCost(InFinalCost),
@@ -61,7 +63,8 @@ public:
 
 	UPROPERTY()
 		USceneComponent* Root;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+		UStaticMesh* GridTileMesh;
 
 	UPROPERTY()
 		TMap<FVector2D, FGridTiles> GridOfTiles;
@@ -85,8 +88,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Tile")
-		TSubclassOf<AGridTile> SpawnedTile;
+	//UPROPERTY(EditDefaultsOnly, Category = "Tile")
+	//UObject<AGridTile> SpawnedTile;
 
 public:
 	// Called every frame

@@ -103,8 +103,8 @@ void AGridSystem::SpawnTile(bool SpawnNoneTiles)
 
 			
 			FActorSpawnParameters SpawnParameters;
-			AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(SpawnedTile, TilePosition, roc, SpawnParameters);
-
+			AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(AGridTile::StaticClass(), TilePosition, roc, SpawnParameters);
+			if (GridTileMesh) SpawnedTileRef->TileMeshAsset = GridTileMesh;
 		
 		if (GridOfTiles.Find(Entry.Key)->GroundTypes != (EGroundTypes::NORMAL) || SpawnNoneTiles == true) {
 
