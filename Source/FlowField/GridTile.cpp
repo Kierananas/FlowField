@@ -4,6 +4,7 @@
 #include "GridTile.h"
 #include "Components/StaticMeshComponent.h"
 #include "GridSystem.h"
+#include "UObject/ConstructorHelpers.h"
 
 // Sets default values
 AGridTile::AGridTile()
@@ -14,12 +15,19 @@ AGridTile::AGridTile()
 	RootComponent = Root;
 	TileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TileMesh"));
 	TileMesh->SetupAttachment(this->RootComponent);
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ModelPath(TEXT("StaticMesh'/Game/StarterContent/Props/SM_Chair.SM_Chair'"));
+	TileMesh->SetStaticMesh(ModelPath.Object);
 }
 
 // Called when the game starts or when spawned
 void AGridTile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (TileMeshAsset) TileMesh->SetStaticMesh(TileMeshAsset);
+	TileMesh->RegisterComponent();
+
 
 	//TileMesh->SetRelativeScale3D()
 }
@@ -28,7 +36,6 @@ void AGridTile::BeginPlay()
 void AGridTile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-		if (TileMeshAsset) TileMesh->SetStaticMesh(TileMeshAsset);
 
 	
 	//OnTileCostChange.Broadcast();
@@ -38,7 +45,9 @@ void AGridTile::Tick(float DeltaTime)
 void AGridTile::OnConstruction(const FTransform& Transform)
 {
 	if (TileMeshAsset) TileMesh->SetStaticMesh(TileMeshAsset);
-}
+
+
+}	
 
 /*void AGridTile::SetTileSize()
 {

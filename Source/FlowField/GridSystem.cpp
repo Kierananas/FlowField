@@ -22,9 +22,8 @@ AGridSystem::AGridSystem()
 	PrimaryActorTick.bCanEverTick = true;
 	Root = CreateAbstractDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = Root;
-
 	GridSizeWorld = FVector2D(500, 500);
-	TileSize = 50;
+	TileSize = 100;
 }
 
 
@@ -92,46 +91,28 @@ void AGridSystem::GenerateMapDataFromWorld()
 }
 void AGridSystem::SpawnTile(bool SpawnNoneTiles)
 {
-
+	FGridTiles tile;
+	
+	//add the nothing thing
 	for (auto& Entry : GridOfTiles)
 	{
 			FVector2D StructKey = GridOfTiles.Find(Entry.Key)->GridIndex;
 			UE_LOG(LogTemp, Warning, TEXT("GridVector is %f, %f"), StructKey.X, StructKey.Y);
 
+		if (GridOfTiles.Find(Entry.Key)->GroundTypes != (EGroundTypes::NONE) || SpawnNoneTiles == true) {
+			
+
+
+		} 
 			FRotator roc;
 			FVector TilePosition = GridOfTiles.Find(Entry.Key)->WorldLocation;
 
 			
 			FActorSpawnParameters SpawnParameters;
-			AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(AGridTile::StaticClass(), TilePosition, roc, SpawnParameters);
+			AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(TileClass, TilePosition, roc, SpawnParameters);
 			if (GridTileMesh) SpawnedTileRef->TileMeshAsset = GridTileMesh;
-		
-		if (GridOfTiles.Find(Entry.Key)->GroundTypes != (EGroundTypes::NORMAL) || SpawnNoneTiles == true) {
-
-
-			/*template< class T >
-			 T* SpawnActor
-			 (
-				 UClass* Class,
-				 FVector const& Location,
-				 FRotator const& Rotation,
-				 AActor* Owner = NULL,
-				 APawn* Instigator = NULL,
-				 bool bNoCollisionFail = false
-			 )
-			 {
-				 return (Class != NULL) ? Cast<T>(GetWorld()->SpawnActor(Class, NAME_None, &Location, &Rotation, NULL, bNoCollisionFail, false, Owner, Instigator)) : NULL;
-			 }
-
-
-			 AGridTile* GridTile = SpawnActor<AActor>(DefaultPawnClass, StartLocation, StartRotation, NULL, Instigator);
-
-
-		 }*/
-
-
-		}
-
+			tile.TileActor = SpawnedTileRef;
+			this->GridOfTiles.Add(StructKey, tile);
 
 	}
 

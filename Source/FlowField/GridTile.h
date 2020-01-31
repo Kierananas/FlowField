@@ -17,15 +17,16 @@ public:
 	// Sets default values for this actor's properties
 	AGridTile();
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 		USceneComponent* Root;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* TileMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
 		UStaticMesh* TileMeshAsset;
 
+	
 	UPROPERTY(BlueprintCallable)
 		FTileCostChange OnTileCostChange;
 

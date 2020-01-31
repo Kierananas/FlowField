@@ -20,7 +20,8 @@ struct FGridTiles
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
 		FVector2D GridIndex;
-	//AActor TileActor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
+		TSubclassOf<AGridTile> TileActor;
 	//AActor UnitOnThisTile;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
 		EGroundTypes GroundTypes;
@@ -60,7 +61,6 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	//float;
 
-
 	UPROPERTY()
 		USceneComponent* Root;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
@@ -76,6 +76,7 @@ public:
 		Fvector2D
 
 	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
 	FVector2D GridSizeWorld;
 	FVector GridLocation;
 	float TileSize;
@@ -127,6 +128,10 @@ public:
 	//void AGridSystem::SetTilePosition(FVector TilePosition);
 
 	void TraceFloorAndObstacles(FVector TilePosition, int i, int j);
+
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AGridTile> TileClass = AGridTile::StaticClass();
 
 
 };
