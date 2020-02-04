@@ -20,7 +20,7 @@ AGridSystem::AGridSystem()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	Root = CreateAbstractDefaultSubobject<USceneComponent>(TEXT("Root"));
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = Root;
 	GridSizeWorld = FVector2D(500, 500);
 	TileSize = 100;
@@ -111,9 +111,9 @@ void AGridSystem::SpawnTile(bool SpawnNoneTiles)
 			FActorSpawnParameters SpawnParameters;
 			AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(TileClass, TilePosition, roc, SpawnParameters);
 			if (GridTileMesh) SpawnedTileRef->TileMeshAsset = GridTileMesh;
-			tile.TileActor = SpawnedTileRef;
-			this->GridOfTiles.Add(StructKey, tile);
-
+			tile.GridTile = SpawnedTileRef;
+			//this->GridOfTiles.Add(StructKey, tile);
+			
 	}
 
 

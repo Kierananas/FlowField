@@ -47,7 +47,9 @@ void AGridTile::OnConstruction(const FTransform& Transform)
 	if (TileMeshAsset) TileMesh->SetStaticMesh(TileMeshAsset);
 
 
-}	
+}
+
+
 
 /*void AGridTile::SetTileSize()
 {

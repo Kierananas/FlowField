@@ -21,7 +21,8 @@ struct FGridTiles
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
 		FVector2D GridIndex;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
-		TSubclassOf<AGridTile> TileActor;
+		AGridTile * GridTile;
+		//TSubclassOf<AGridTile> TileActor;
 	//AActor UnitOnThisTile;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
 		EGroundTypes GroundTypes;
@@ -66,21 +67,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
 		UStaticMesh* GridTileMesh;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintType)
 		TMap<FVector2D, FGridTiles> GridOfTiles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
+	FVector2D GridSizeWorld;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
+	FVector GridLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
+	float TileSize;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
+	float TileSizeMinus;	
 	/*
-
 		float
 		float
 		FVector
 		Fvector2D
 
 	*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
-	FVector2D GridSizeWorld;
-	FVector GridLocation;
-	float TileSize;
-	float TileSizeMinus;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
 		EGroundTypes GroundTypesEnum;
