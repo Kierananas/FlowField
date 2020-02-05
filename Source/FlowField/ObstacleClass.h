@@ -23,7 +23,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Obstacle")
 		UStaticMeshComponent* ObstacleMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obstacle", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obstacle")
 		EGroundTypes GroundTypes;
 
 protected:

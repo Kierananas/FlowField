@@ -3,6 +3,7 @@
 
 #include "GridSystem.h"
 #include "Math.h"
+#include "Math/Vector.h"
 #include "Components/SceneComponent.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
@@ -22,8 +23,10 @@ AGridSystem::AGridSystem()
 	PrimaryActorTick.bCanEverTick = true;
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = Root;
+	
 	GridSizeWorld = FVector2D(500, 500);
 	TileSize = 100;
+	TileSizeMinus = 5.f;
 }
 
 
@@ -34,7 +37,7 @@ void AGridSystem::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
 	bool SpawnNoneTiles = false;
 	GenerateMapDataFromWorld();
-	SpawnTile(SpawnNoneTiles);
+	//SpawnTile(SpawnNoneTiles);
 	
 }
 
@@ -89,7 +92,7 @@ void AGridSystem::GenerateMapDataFromWorld()
 
 
 }
-void AGridSystem::SpawnTile(bool SpawnNoneTiles)
+/*void AGridSystem::SpawnTile(bool SpawnNoneTiles)
 {
 	FGridTiles tile;
 	
@@ -101,9 +104,6 @@ void AGridSystem::SpawnTile(bool SpawnNoneTiles)
 
 		if (GridOfTiles.Find(Entry.Key)->GroundTypes != (EGroundTypes::NONE) || SpawnNoneTiles == true) {
 			
-
-
-		} 
 			FRotator roc;
 			FVector TilePosition = GridOfTiles.Find(Entry.Key)->WorldLocation;
 
@@ -111,11 +111,17 @@ void AGridSystem::SpawnTile(bool SpawnNoneTiles)
 			FActorSpawnParameters SpawnParameters;
 			AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(TileClass, TilePosition, roc, SpawnParameters);
 			if (GridTileMesh) SpawnedTileRef->TileMeshAsset = GridTileMesh;
+			tile.GridIndex = GridOfTiles.Find(Entry.Key)->GridIndex;
+			tile.WorldLocation = GridOfTiles.Find(Entry.Key)->WorldLocation;
+			//add the nothing thing
+			tile.TileCost = GridOfTiles.Find(Entry.Key)->TileCost;
+			tile.GroundTypes = GridOfTiles.Find(Entry.Key)->GroundTypes;
 			tile.GridTile = SpawnedTileRef;
-		
-		
-			//this->GridOfTiles.Add(StructKey, tile);
-			
+			this->GridOfTiles.FindOrAdd(StructKey, tile);
+
+
+		} 
+
 	}
 
 
@@ -124,19 +130,26 @@ void AGridSystem::SpawnTile(bool SpawnNoneTiles)
 		
 
 }
-
+*/
 
 //FVector
 FVector AGridSystem::GridBottomLeft()
  {
-	GridLocation = Root->RelativeLocation;
+	 FVector GridLocation = GetActorLocation();
 	 FVector rightVector = Root->GetRightVector();
-	 FVector xVector = (rightVector * GridSizeWorld.X) - GridLocation;
+	 FVector xVector = rightVector * GridSizeWorld.X;
+	 FVector xGridVector = GridLocation - xVector;
+	// UE_LOG(LogTemp, Warning, TEXT("GridLocation Vector %f, %f, %f"), GridLocation.X, GridLocation.Y, GridLocation.Z);
+	// UE_LOG(LogTemp, Warning, TEXT("NewGridVector %f, %f, %f"), xGridVector.X, xGridVector.Y, xGridVector.Z);
+	 //UE_LOG(LogTemp, Warning, TEXT ("Right Vector Math %f, %f, %f"), xVector.X, xVector.Y, xVector.Z);
+		 //UE_LOG(LogTemp, Warning, TEXT("GridVector is %f, %f"), StructKey.X, StructKey.Y);
 
 	 
 	 FVector forwardVector = Root->GetForwardVector();
 	 FVector yVector = forwardVector * GridSizeWorld.Y;
-	 return FVector(xVector - yVector);
+	// UE_LOG(LogTemp, Warning, TEXT("Forward Vector Math %f, %f, %f"), yVector.X, yVector.Y, yVector.Z);
+	 
+	 return FVector(xGridVector - yVector);
  }
 
 int AGridSystem::GetTileCost(EGroundTypes TileType)
@@ -226,11 +239,13 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 
 	 /*Make Struct*/
 	 FGridTiles tile;
+	 FRotator roc;
 	 tile.GridIndex = StructKey;
 	 tile.WorldLocation = TilePosition;
 	 //add the nothing thing
 	 tile.TileCost = GetTileCost(EGroundTypes::NONE);
 	 tile.GroundTypes = EGroundTypes::NONE;
+
 	
 	 bool bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(), ECollisionChannel::ECC_GameTraceChannel1, FCollisionShape::MakeSphere(TileSize - TileSizeMinus));
 	 if (bSphereTrace) {
@@ -244,12 +259,20 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 			 if (obstacle) {
 				tile.TileCost = GetTileCost(obstacle->GroundTypes);
 				tile.GroundTypes = obstacle->GroundTypes;
+				FActorSpawnParameters SpawnParameters;
+				AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(TileClass, TilePosition, roc, SpawnParameters);
+				if (GridTileMesh) SpawnedTileRef->TileMeshAsset = GridTileMesh;
+				tile.GridTile = SpawnedTileRef;
 			 }
 		 }
 		 else {
 
 			 tile.TileCost = GetTileCost(EGroundTypes::NORMAL);
 			 tile.GroundTypes = EGroundTypes::NORMAL;
+			 FActorSpawnParameters SpawnParameters;
+			 AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(TileClass, TilePosition, roc, SpawnParameters);
+			 if (GridTileMesh) SpawnedTileRef->TileMeshAsset = GridTileMesh;
+			 tile.GridTile = SpawnedTileRef;
 		 }
 	 }
 

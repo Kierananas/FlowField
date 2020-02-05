@@ -16,7 +16,7 @@ AGridTile::AGridTile()
 	TileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TileMesh"));
 	TileMesh->SetupAttachment(this->RootComponent);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ModelPath(TEXT("StaticMesh'/Game/StarterContent/Props/SM_Chair.SM_Chair'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ModelPath(TEXT("StaticMesh'/Game/StarterContent/Architecture/Floor_400x400.Floor_400x400'"));
 	TileMesh->SetStaticMesh(ModelPath.Object);
 }
 

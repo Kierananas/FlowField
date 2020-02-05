@@ -71,8 +71,8 @@ public:
 		TMap<FVector2D, FGridTiles> GridOfTiles;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
 	FVector2D GridSizeWorld;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
-	FVector GridLocation;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
+	//FVector GridLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
 	float TileSize;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
@@ -86,8 +86,8 @@ public:
 	*/
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
-		EGroundTypes GroundTypesEnum;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+		//EGroundTypes GroundTypesEnum;
 
 protected:
 	// Called when the game starts or when spawned
@@ -103,8 +103,8 @@ public:
 	void GenerateMapDataFromWorld();
 
 
-	UFUNCTION()
-	void SpawnTile(bool SpawnNoneTiles);
+	//UFUNCTION()
+	//void SpawnTile(bool SpawnNoneTiles);
 
 
 	void GridTileNumber(int& GridTileNumberX, int& GridTileNumberY);
