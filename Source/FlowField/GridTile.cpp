@@ -51,6 +51,7 @@ void AGridTile::OnConstruction(const FTransform& Transform)
 
 
 
+
 /*void AGridTile::SetTileSize()
 {
 	AGridSystem.TileSize;

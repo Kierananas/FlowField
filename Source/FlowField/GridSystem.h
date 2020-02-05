@@ -21,7 +21,7 @@ struct FGridTiles
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
 		FVector2D GridIndex;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")
-		AGridTile * GridTile;
+	AGridTile* GridTile;
 		//TSubclassOf<AGridTile> TileActor;
 	//AActor UnitOnThisTile;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid Struct")

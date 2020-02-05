@@ -31,11 +31,11 @@ AGridSystem::AGridSystem()
 void AGridSystem::BeginPlay()
 {
 	Super::BeginPlay();
-	FVector GridLocation = GetActorLocation();
 	UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
 	bool SpawnNoneTiles = false;
 	GenerateMapDataFromWorld();
 	SpawnTile(SpawnNoneTiles);
+	
 }
 
 // Called every frame
@@ -112,6 +112,8 @@ void AGridSystem::SpawnTile(bool SpawnNoneTiles)
 			AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(TileClass, TilePosition, roc, SpawnParameters);
 			if (GridTileMesh) SpawnedTileRef->TileMeshAsset = GridTileMesh;
 			tile.GridTile = SpawnedTileRef;
+		
+		
 			//this->GridOfTiles.Add(StructKey, tile);
 			
 	}
@@ -127,6 +129,7 @@ void AGridSystem::SpawnTile(bool SpawnNoneTiles)
 //FVector
 FVector AGridSystem::GridBottomLeft()
  {
+	GridLocation = Root->RelativeLocation;
 	 FVector rightVector = Root->GetRightVector();
 	 FVector xVector = (rightVector * GridSizeWorld.X) - GridLocation;
 
