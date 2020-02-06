@@ -110,6 +110,11 @@ public:
 	void GridTileNumber(int& GridTileNumberX, int& GridTileNumberY);
 
 	
+
+	//TileHoevered
+
+
+
 	//void GetTilePosition(int i, int j);
 
 	/*void AddNewTile(FVector2D GridIndex, //AActor TileActor; //AActor UnitOnThisTile;

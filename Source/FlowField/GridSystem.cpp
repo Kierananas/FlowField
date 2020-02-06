@@ -38,6 +38,7 @@ void AGridSystem::BeginPlay()
 	bool SpawnNoneTiles = false;
 	GenerateMapDataFromWorld();
 	//SpawnTile(SpawnNoneTiles);
+
 	
 }
 
@@ -276,6 +277,9 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 		 }
 	 }
 
+
+	 tile.GridTile->the_grid = this;
+	 tile.GridTile->GridIndex = tile.GridIndex;
 	 this->GridOfTiles.Add(StructKey, tile);
 	 //UE_LOG(LogTemp, Warning, TEXT("End of SphereTrace Loop X %f, Y %f"), StructKey.X, StructKey.Y);
 

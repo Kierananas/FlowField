@@ -6,6 +6,8 @@
 #include "GridSystem.h"
 #include "UObject/ConstructorHelpers.h"
 
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCursorOver);
+
 // Sets default values
 AGridTile::AGridTile()
 {
@@ -18,7 +20,47 @@ AGridTile::AGridTile()
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> ModelPath(TEXT("StaticMesh'/Game/StarterContent/Architecture/Floor_400x400.Floor_400x400'"));
 	TileMesh->SetStaticMesh(ModelPath.Object);
+
+
+	TileMesh->OnBeginCursorOver.AddDynamic(this, &AGridTile::BeginCursorOver);
+
 }
+
+void AGridTile::BeginCursorOver(UPrimitiveComponent* TouchedComponent)
+{
+	//ive been touched. teehee
+
+
+	//call function Event Start Over Tile
+	//AGridSystem* GenerateMapDataFromWorld();
+	//call function in the gird 
+	//the_grid.
+	//Grid.Event New Tile Overed(this);
+}
+
+void AGridTile::StartOverTile()
+{
+	isOvered = true;
+	SetTileColour();
+
+}
+
+void AGridTile::SetTileColour()
+{
+	FGridTiles tile;
+	
+	the_grid->GridOfTiles.Find(GridIndex)->GroundTypes;
+
+	
+
+	
+
+}
+
+
+
+
+
 
 // Called when the game starts or when spawned
 void AGridTile::BeginPlay()
@@ -27,6 +69,7 @@ void AGridTile::BeginPlay()
 
 	if (TileMeshAsset) TileMesh->SetStaticMesh(TileMeshAsset);
 	TileMesh->RegisterComponent();
+	
 
 
 	//TileMesh->SetRelativeScale3D()
