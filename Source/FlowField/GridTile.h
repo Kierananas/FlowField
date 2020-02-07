@@ -16,7 +16,15 @@ class FLOWFIELD_API AGridTile : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AGridTile();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
 	bool isOvered = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
+	bool isSelected = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
+	bool isInPath = false;
 
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* Root;
@@ -28,10 +36,10 @@ public:
 		UStaticMesh* TileMeshAsset;
 
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	class AGridSystem * the_grid;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
 		FVector2D GridIndex;
 	
 	//UPROPERTY(BlueprintCallable)
@@ -41,11 +49,11 @@ public:
 	UFUNCTION()
 	void BeginCursorOver(UPrimitiveComponent* TouchedComponent);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintImplementableEvent, Category = "Overlap Events")
 	void StartOverTile();
 
-	UFUNCTION()
-	void SetTileColour();
+	//UFUNCTION()
+	//void SetTileColour();
 
 
 

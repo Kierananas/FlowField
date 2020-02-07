@@ -277,10 +277,12 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 		 }
 	 }
 
-
-	 tile.GridTile->the_grid = this;
-	 tile.GridTile->GridIndex = tile.GridIndex;
-	 this->GridOfTiles.Add(StructKey, tile);
+	 if (tile.GridTile) {
+		tile.GridTile->the_grid = this;
+		 tile.GridTile->GridIndex = tile.GridIndex;
+		this->GridOfTiles.Add(StructKey, tile);
+	 } 
+	 
 	 //UE_LOG(LogTemp, Warning, TEXT("End of SphereTrace Loop X %f, Y %f"), StructKey.X, StructKey.Y);
 
 
@@ -293,6 +295,12 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 
 
 }
+
+ void AGridSystem::NewTileOvered()
+ {
+	 
+
+ }
 
 
 

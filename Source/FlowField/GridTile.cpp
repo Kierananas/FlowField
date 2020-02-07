@@ -32,7 +32,6 @@ void AGridTile::BeginCursorOver(UPrimitiveComponent* TouchedComponent)
 
 
 	//call function Event Start Over Tile
-	//AGridSystem* GenerateMapDataFromWorld();
 	//call function in the gird 
 	//the_grid.
 	//Grid.Event New Tile Overed(this);
@@ -41,11 +40,11 @@ void AGridTile::BeginCursorOver(UPrimitiveComponent* TouchedComponent)
 void AGridTile::StartOverTile()
 {
 	isOvered = true;
-	SetTileColour();
+	//SetTileColour();
 
 }
 
-void AGridTile::SetTileColour()
+/*void AGridTile::SetTileColour()
 {
 	FGridTiles tile;
 	
@@ -55,7 +54,7 @@ void AGridTile::SetTileColour()
 
 	
 
-}
+}*/
 
 
 
