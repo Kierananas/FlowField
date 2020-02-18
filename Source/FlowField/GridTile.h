@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "GridTile.generated.h"
 
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTileCostChange);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTileCostChange);
 
 UCLASS()
 class FLOWFIELD_API AGridTile : public AActor
@@ -21,11 +21,11 @@ public:
 	bool isOvered = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
-	bool isSelected = false;
+		bool isSelected = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
-	bool isInPath = false;
-
+		bool isInPath = false;
+	
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* Root;
 
@@ -35,28 +35,27 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
 		UStaticMesh* TileMeshAsset;
 
-
 	UPROPERTY(VisibleAnywhere)
-	class AGridSystem * the_grid;
+		class AGridSystem* the_grid;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GridTile")
 		FVector2D GridIndex;
+
 	
 	//UPROPERTY(BlueprintCallable)
 		//FTileCostChange OnTileCostChange;
 
 
 	UFUNCTION()
-	void BeginCursorOver(UPrimitiveComponent* TouchedComponent);
+		void BeginCursorOver(UPrimitiveComponent* TouchedComponent);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Overlap Events")
-	void StartOverTile();
+	UFUNCTION(/*BlueprintImplementableEvent, Category = "Overlap Events"*/)
+		void StartOverTile();
 
 	//UFUNCTION()
-	//void SetTileColour();
+		//void SetTileColour();
 
-
-
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

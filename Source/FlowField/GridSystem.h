@@ -67,7 +67,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
 		UStaticMesh* GridTileMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
+	UPROPERTY(BlueprintType, BlueprintReadWrite, Category = "Map")
 		TMap<FVector2D, FGridTiles> GridOfTiles;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
 	FVector2D GridSizeWorld;
@@ -110,11 +110,6 @@ public:
 	void GridTileNumber(int& GridTileNumberX, int& GridTileNumberY);
 
 	
-
-	//TileHoevered
-
-
-
 	//void GetTilePosition(int i, int j);
 
 	/*void AddNewTile(FVector2D GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
@@ -142,8 +137,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AGridTile> TileClass = AGridTile::StaticClass();
 
-
 	//A* code goes in this function 
-	void NewTileOvered();
+	static void NewTileOvered();
 
 };

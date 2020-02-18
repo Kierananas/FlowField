@@ -38,7 +38,6 @@ void AGridSystem::BeginPlay()
 	bool SpawnNoneTiles = false;
 	GenerateMapDataFromWorld();
 	//SpawnTile(SpawnNoneTiles);
-
 	
 }
 
@@ -46,6 +45,12 @@ void AGridSystem::BeginPlay()
 void AGridSystem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void AGridSystem::NewTileOvered()
+{
+
 
 }
 
@@ -229,13 +234,13 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 	} */
 
  void AGridSystem::TraceFloorAndObstacles(FVector TilePosition, int i, int j)
-{
+ {
 	 FVector TileAdded = TilePosition + FVector(1.f, 1.f, 1.f);
 	 FHitResult OutHit;
 	 float X(i);
 	 float Y(j);
 	 /*GridOfTilesKey*/
-	 FVector2D StructKey(X,Y);
+	 FVector2D StructKey(X, Y);
 
 
 	 /*Make Struct*/
@@ -247,10 +252,10 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 	 tile.TileCost = GetTileCost(EGroundTypes::NONE);
 	 tile.GroundTypes = EGroundTypes::NONE;
 
-	
+
 	 bool bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(), ECollisionChannel::ECC_GameTraceChannel1, FCollisionShape::MakeSphere(TileSize - TileSizeMinus));
 	 if (bSphereTrace) {
-		 
+
 		 bSphereTrace = GetWorld()->SweepSingleByChannel(OutHit, TilePosition, TileAdded, FQuat(), ECollisionChannel::ECC_GameTraceChannel2, FCollisionShape::MakeSphere(TileSize - TileSizeMinus));
 
 		 if (bSphereTrace) {
@@ -258,18 +263,20 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 			 AObstacleClass* obstacle = Cast<AObstacleClass>(OutHit.Actor);
 			 //is valid.
 			 if (obstacle) {
-				tile.TileCost = GetTileCost(obstacle->GroundTypes);
-				tile.GroundTypes = obstacle->GroundTypes;
-				FActorSpawnParameters SpawnParameters;
-				AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(TileClass, TilePosition, roc, SpawnParameters);
-				if (GridTileMesh) SpawnedTileRef->TileMeshAsset = GridTileMesh;
-				tile.GridTile = SpawnedTileRef;
+				 tile.TileCost = GetTileCost(obstacle->GroundTypes);
+				 tile.GroundTypes = obstacle->GroundTypes;
+				 tile.GridIndex = StructKey;
+				 FActorSpawnParameters SpawnParameters;
+				 AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(TileClass, TilePosition, roc, SpawnParameters);
+				 if (GridTileMesh) SpawnedTileRef->TileMeshAsset = GridTileMesh;
+				 tile.GridTile = SpawnedTileRef;
 			 }
 		 }
 		 else {
 
 			 tile.TileCost = GetTileCost(EGroundTypes::NORMAL);
 			 tile.GroundTypes = EGroundTypes::NORMAL;
+			 tile.GridIndex = StructKey;
 			 FActorSpawnParameters SpawnParameters;
 			 AGridTile* SpawnedTileRef = GetWorld()->SpawnActor<AGridTile>(TileClass, TilePosition, roc, SpawnParameters);
 			 if (GridTileMesh) SpawnedTileRef->TileMeshAsset = GridTileMesh;
@@ -277,28 +284,23 @@ FGridTiles NewTile(GridIndex, //AActor TileActor; //AActor UnitOnThisTile;
 		 }
 	 }
 
+	 this->GridOfTiles.Add(StructKey, tile);
 	 if (tile.GridTile) {
-		tile.GridTile->the_grid = this;
+		 tile.GridTile->the_grid = this;
 		 tile.GridTile->GridIndex = tile.GridIndex;
-		this->GridOfTiles.Add(StructKey, tile);
-	 } 
-	 
+		 this->GridOfTiles.Add(StructKey, tile);
+	 }
 	 //UE_LOG(LogTemp, Warning, TEXT("End of SphereTrace Loop X %f, Y %f"), StructKey.X, StructKey.Y);
 
 
-
-
-
-
-
-
-
-
-}
-
- void AGridSystem::NewTileOvered()
- {
 	 
+
+
+
+
+
+
+
 
  }
 
