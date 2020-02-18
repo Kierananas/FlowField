@@ -52,9 +52,6 @@ public:
 	UFUNCTION(/*BlueprintImplementableEvent, Category = "Overlap Events"*/)
 		void StartOverTile();
 
-	UFUNCTION()
-		void SetWidgetVariables();
-	
 	//UFUNCTION()
 		//void SetTileColour();
 

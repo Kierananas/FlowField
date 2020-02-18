@@ -41,11 +41,6 @@ void AGridTile::StartOverTile()
 
 }
 
-void AGridTile::SetWidgetVariables()
-{
-
-}
-
 /*void AGridTile::SetTileColour()
 {
 	FGridTiles tile;
