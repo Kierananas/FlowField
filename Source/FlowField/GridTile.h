@@ -7,29 +7,31 @@
 #include "GridTile.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTileCostChange);
+class UMaterialInstanceDynamic;
+
 
 UCLASS()
 class FLOWFIELD_API AGridTile : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AGridTile();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
-	bool isOvered = false;
+		bool isOvered = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
 		bool isSelected = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
 		bool isInPath = false;
-	
+
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* Root;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* TileMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
@@ -41,26 +43,49 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GridTile")
 		FVector2D GridIndex;
 
-	
+
 	//UPROPERTY(BlueprintCallable)
 		//FTileCostChange OnTileCostChange;
 
-
+	
 	UFUNCTION()
 		void BeginCursorOver(UPrimitiveComponent* TouchedComponent);
 
-	UFUNCTION(/*BlueprintImplementableEvent, Category = "Overlap Events"*/)
+	UFUNCTION()
+		void EndCursorOver(UPrimitiveComponent* TouchedComponent);
+
+	UFUNCTION(BlueprintCallable, Category = "Tile")
 		void StartOverTile();
 
-	//UFUNCTION()
-		//void SetTileColour();
+	UFUNCTION(BlueprintCallable, Category = "Tile")
+		void EndOverTile();
 
-	
+
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Tile")
+		void SetWidgetValues();
+
+
+	UFUNCTION(BlueprintCallable, Category = "Tile")
+		void SetTileColour() const;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridColours")
+		FLinearColor NormalTileColour;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridColours")
+		FLinearColor DifficultTileColour;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridColours")
+		FLinearColor ReallyDifficultTileColour;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridColours")
+		FLinearColor ImpossibleTileColour;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridColours")
+		FLinearColor NoneTileColour;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -68,4 +93,6 @@ public:
 
 	//void SetTileSize();
 
+private:
+	//UMaterialInstanceDynamic* DynamicMaterial;
 };

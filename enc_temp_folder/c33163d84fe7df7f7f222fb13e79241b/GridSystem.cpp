@@ -50,19 +50,17 @@ void AGridSystem::Tick(float DeltaTime)
 
 void AGridSystem::NewTileOvered(AGridTile* OveredTile)
 {
-	/*
-	if(OveredTile == nullptr)
+	AGridTile* TileRef = nullptr;
+	if(TileRef)
 	{
-		
-		OveredTile;
+		OveredTile->EndOverTile();
+		TileRef = OveredTile;
 	}
 	else {
-		OveredTile->EndOverTile();
-		OveredTile;
-
+		TileRef = OveredTile;
 		UE_LOG(LogTemp, Warning, TEXT("123142"));
 	}
-	*/
+
 }
 
 void AGridSystem::GridTileNumber(int& GridTileNumberX, int& GridTileNumberY)

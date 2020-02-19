@@ -77,6 +77,8 @@ public:
 	float TileSize;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map")
 	float TileSizeMinus;	
+
+
 	/*
 		float
 		float
@@ -137,7 +139,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AGridTile> TileClass = AGridTile::StaticClass();
 
-	//A* code goes in this function 
-	static void NewTileOvered();
+	//A* code goes in this function
+	UFUNCTION(BlueprintCallable, Category = "Tile")
+	void NewTileOvered(AGridTile * OveredTile);
 
 };
