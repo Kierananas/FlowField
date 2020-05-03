@@ -23,14 +23,14 @@ AGridTile::AGridTile()
 	DynamicMaterial = UMaterialInstanceDynamic::Create(Material, NULL);
 	TileMesh->SetMaterial(0, DynamicMaterial);*/
 	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ModelPath(TEXT("StaticMesh'/Game/StarterContent/Architecture/Floor_400x400.Floor_400x400'"));
-	TileMesh->SetStaticMesh(ModelPath.Object);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ModelPath(TEXT("StaticMesh'/Game/StarterContent/Architecture/Floor_400x400.Floor_400x400'")); // Locate the mesh asset and set it to ModelPath.
+	TileMesh->SetStaticMesh(ModelPath.Object); // Set TileMesh to = ModelPath done above.
 
-	TileMesh->OnBeginCursorOver.AddDynamic(this, &AGridTile::BeginCursorOver);
+	TileMesh->OnBeginCursorOver.AddDynamic(this, &AGridTile::BeginCursorOver); // Setting the mesh to be dynamic so the player than interact with it to chnage colour.
 }
 
 
-
+// When the player's cursor overlaps the actor.
 void AGridTile::BeginCursorOver(UPrimitiveComponent* TouchedComponent)
 {
 	//ive been touched. teehee
@@ -41,24 +41,24 @@ void AGridTile::BeginCursorOver(UPrimitiveComponent* TouchedComponent)
 	//call function in the gird 
 	//Grid.Event New Tile Overed(this);
 }
-
+// The players cursor was on the actor but now been moved off.
 void AGridTile::EndCursorOver(UPrimitiveComponent* TouchedComponent)
 {
-	the_grid->NewTileOvered(nullptr);
+	the_grid->NewTileOvered(nullptr); // Set the selected tile referrence to be null as we no longer are on one.
 }
 
 
-
+// Called on overlapp, used to chnage the colour and other values.
 void AGridTile::StartOverTile()
 {
-	isOvered = true;
-	SetTileColour();
+	isOvered = true; // If this bool is true then change values/ colour in SetTileColour function.
+	SetTileColour(); // Change colour of tile
 }
 
 void AGridTile::EndOverTile()
 {
-	isOvered = false;
-	SetTileColour();
+	isOvered = false; // If this bool is false then reset the chnages done in StartOverTile.
+	SetTileColour(); // Change colour of tile
 }
 
 //void AGridTile::SetWidgetValues()
@@ -66,38 +66,39 @@ void AGridTile::EndOverTile()
 
 	
 //}
-
+// This function is used to switch between colours depending on groundtypes (obstacles) and slight chnage of colour to show whether they are selected or not.
 void AGridTile::SetTileColour() const
 {
+	// Switch function between ground types.
 	FLinearColor TileColour;
 	switch (the_grid->GridOfTiles.Find(GridIndex)->GroundTypes)
 	{
 	case EGroundTypes::NORMAL:
-		TileColour = NormalTileColour;
+		TileColour = NormalTileColour; // Reset to preset colour (GridTile.h)
 		break;
 	case EGroundTypes::DIFFICULT:
-		TileColour = DifficultTileColour;
+		TileColour = DifficultTileColour; // Reset to preset colour (GridTile.h)
 		break;
 	case EGroundTypes::REALLYDIFFICULT:
-		TileColour = ReallyDifficultTileColour;
+		TileColour = ReallyDifficultTileColour; // Reset to preset colour (GridTile.h)
 		break;
 	case EGroundTypes::IMPOSSIBLE:
-		TileColour = ImpossibleTileColour;
+		TileColour = ImpossibleTileColour; // Reset to preset colour (GridTile.h)
 		break;
 	case EGroundTypes::NONE:
-		TileColour = NoneTileColour;
-		break;
+		TileColour = NoneTileColour; // Reset to preset colour (GridTile.h)
+		break; 
 	}
 
-	if (isSelected)
+	if (isSelected) // if the tile is selected, make the colour lighter by scaling the colour up, if not, remain the same.
 	{
-		TileMesh->SetScalarParameterValueOnMaterials("bIsSelected", 1.f);
+		TileMesh->SetScalarParameterValueOnMaterials("bIsSelected", 1.f); 
 		
 	}	else {
 		TileMesh->SetScalarParameterValueOnMaterials("bIsSelected", 0.f);
 	}
 
-	if (isOvered)
+	if (isOvered) // If the cursor is over the tile, increase brightness.
 	{
 		FVector OveredColour = TileColour * 3.f;
 		TileColour = OveredColour;
@@ -108,7 +109,7 @@ void AGridTile::SetTileColour() const
 		TileColour = OveredColour * 3.f*/
 	}
 
-	if (isInPath)
+	if (isInPath) // For pathfinding, if a tile is part of the selected path, change colour to a blue colour.
 	{
 		FLinearColor Colour
 		(
@@ -118,16 +119,17 @@ void AGridTile::SetTileColour() const
 			1.f
 		);	TileColour = Colour;
 	}
-	const FVector OveredColour = TileColour;
-	TileMesh->SetVectorParameterValueOnMaterials("TileColour", OveredColour);
+	const FVector OveredColour = TileColour; // Once all checks have been done, set the colour to const.
+	TileMesh->SetVectorParameterValueOnMaterials("TileColour", OveredColour); // Change the tilemesh colour to the colour the function has produced.
 }
 
 // Called when the game starts or when spawned
 void AGridTile::BeginPlay()
 {
+		// Call any Unreal actor behaviour followed by our defined behaviour.
 	Super::BeginPlay();
 
-	if (TileMeshAsset) TileMesh->SetStaticMesh(TileMeshAsset);
+	if (TileMeshAsset) TileMesh->SetStaticMesh(TileMeshAsset); // Check if the actor has a mesh, if not assign the blueprint assignable mesh to the actor.
 	TileMesh->RegisterComponent();
 
 
@@ -146,7 +148,7 @@ void AGridTile::Tick(float DeltaTime)
 
 void AGridTile::OnConstruction(const FTransform& Transform)
 {
-	if (TileMeshAsset) TileMesh->SetStaticMesh(TileMeshAsset);
+	if (TileMeshAsset) TileMesh->SetStaticMesh(TileMeshAsset); // Check if the actor has a mesh, if not assign the blueprint assignable mesh to the actor.
 
 
 }

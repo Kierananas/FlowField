@@ -6,8 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "GridTile.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTileCostChange);
-class UMaterialInstanceDynamic;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTileCostChange); // Testing
+class UMaterialInstanceDynamic; // Inheriting unreal material class.
 
 
 UCLASS()
@@ -20,28 +20,29 @@ public:
 	AGridTile();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
-		bool isOvered = false;
+		bool isOvered = false; // Boolean used for toggling cursor over tile and changing colour.
+		
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
-		bool isSelected = false;
+		bool isSelected = false; // Boolean for selecting tiles and changing tile colour.
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booleans")
-		bool isInPath = false;
+		bool isInPath = false; // Used to toggle colour change to tiles that are in a path.
 
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* Root;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UStaticMeshComponent* TileMesh;
+		UStaticMeshComponent* TileMesh; // The mesh of the tile.
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
-		UStaticMesh* TileMeshAsset;
+		UStaticMesh* TileMeshAsset; // A mesh that can be reassigned in editor that controls the tile's mesh.
 
 	UPROPERTY(VisibleAnywhere)
-		class AGridSystem* the_grid;
+		class AGridSystem* the_grid; // This is a referrence to the GridSystem Class, used to access memory stored within that class.
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GridTile")
-		FVector2D GridIndex;
+		FVector2D GridIndex; // A 2D vector that represents the index of a tile.
 
 
 	//UPROPERTY(BlueprintCallable)
@@ -49,25 +50,25 @@ public:
 
 	
 	UFUNCTION()
-		void BeginCursorOver(UPrimitiveComponent* TouchedComponent);
+		void BeginCursorOver(UPrimitiveComponent* TouchedComponent); // Event that fires when the cursor is over the actor.
 
 	UFUNCTION()
-		void EndCursorOver(UPrimitiveComponent* TouchedComponent);
+		void EndCursorOver(UPrimitiveComponent* TouchedComponent); // Event that fires when the cursor leaves the actor.
 
 	UFUNCTION(BlueprintCallable, Category = "Tile")
-		void StartOverTile();
+		void StartOverTile(); // Function that is called in BeginCursorOver.
 
-	UFUNCTION(BlueprintCallable, Category = "Tile")
-		void EndOverTile();
+	UFUNCTION(BlueprintCallable, Category = "Tile") 
+		void EndOverTile(); // Function that is called in EndCursorOver.
 
 
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Tile")
-		void SetWidgetValues();
+		void SetWidgetValues(); // This function is called within the GridSystem class when the tiles are spawned. It sets the values associated with the widget of the tile actor.
 
 
 	UFUNCTION(BlueprintCallable, Category = "Tile")
-		void SetTileColour() const;
+		void SetTileColour() const; // Sets the colour of the tile.
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridColours")
 		FLinearColor NormalTileColour;
